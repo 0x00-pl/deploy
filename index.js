@@ -55,10 +55,26 @@ function deploy_app(app){
     if(post_deploy){ child_process.execSync(post_deploy) }
 }
 
-function read_script(filename){
+function eval_script(filename){
+    let script = reqiure(filename)
+    if(typeof script === 'function'){
+        script = script()
+    }
+    return script
+}
+
+function decode_script(filename){
     let script_json = fs.readFileSync(filename, {encoding: 'utf8'})
     let script = JSON.parse(script_json)
     return script
+}
+
+function read_script(filename){
+    if(filename.endsWith('js')){
+        return eval_script(filename)
+    } else {
+        return decode_script(filename)
+    }
 }
 
 function run_script(script){
@@ -71,4 +87,3 @@ function run_script(script){
 let script = read_script(script_name)
 run_in_path(root_path, run_script.bind(this, script))
 
-    
