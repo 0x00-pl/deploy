@@ -35,8 +35,6 @@ function run_in_path(pathname, f){
 function install_app(app){
     let git_repository = app.git
     child_process.execSync(`git clone ${git_repository} .`)
-    let post_install = app.post_install
-    if(post_install){ child_process.execSync(post_install) }
 }
 
 function deploy_config(app){
@@ -50,9 +48,17 @@ function deploy_config(app){
 
 function deploy_app(app){
     install_app(app)
+    let post_install = app.post_install
+    if(post_install){
+        console.log('post_install: ', post_install)
+        child_process.execSync(post_install)
+    }
     deploy_config(app)
     let post_deploy = app.post_deploy
-    if(post_deploy){ child_process.execSync(post_deploy) }
+    if(post_deploy){
+        console.log('post_deploy: ', post_deploy)
+        child_process.execSync(post_deploy)
+    }
 }
 
 function eval_script(filename){
