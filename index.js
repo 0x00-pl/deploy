@@ -34,7 +34,7 @@ function run_in_path(pathname, f){
 
 function install_app(app){
     let git_repository = app.git
-    child_process.execSync(`git clone ${git_repository} .`)
+    child_process.execSync(`git clone ${git_repository} .`, {stdio: [process.stdin, process.stdout, process.stderr]})
 }
 
 function deploy_config(app){
@@ -51,13 +51,13 @@ function deploy_app(app){
     let post_install = app.post_install
     if(post_install){
         console.log('post_install: ', post_install)
-        child_process.execSync(post_install)
+        child_process.execSync(post_install, {stdio: [process.stdin, process.stdout, process.stderr]})
     }
     deploy_config(app)
     let post_deploy = app.post_deploy
     if(post_deploy){
         console.log('post_deploy: ', post_deploy)
-        child_process.execSync(post_deploy)
+        child_process.execSync(post_deploy, {stdio: [process.stdin, process.stdout, process.stderr]})
     }
 }
 
@@ -85,7 +85,7 @@ function read_script(filename){
 
 function run_script(script){
     Object.keys(script).forEach(name=>{
-	child_process.execSync(`rm -rf ./${name}`)
+	child_process.execSync(`rm -rf ./${name}`, {stdio: [process.stdin, process.stdout, process.stderr]})
 	run_in_path(name, deploy_app.bind(this, script[name]))
     })
 }
