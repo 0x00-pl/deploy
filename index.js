@@ -34,7 +34,9 @@ function run_in_path(pathname, f){
 
 function install_app(app){
     let git_repository = app.git
-    child_process.execSync(`git clone ${git_repository} .`, {stdio: [process.stdin, process.stdout, process.stderr]})
+    if(git_repository){
+	child_process.execSync(`git clone ${git_repository} .`, {stdio: [process.stdin, process.stdout, process.stderr]})
+    }
 }
 
 function deploy_config(app){
@@ -62,7 +64,8 @@ function deploy_app(app){
 }
 
 function eval_script(filename){
-    let script = reqiure(filename)
+    filename = path.resolve(filename)
+    let script = require(filename)
     if(typeof script === 'function'){
         script = script()
     }
